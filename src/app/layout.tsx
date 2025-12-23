@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://v2-mocha-ten.vercel.app/'), // TODO: Replace with your actual domain
     title: "Oh Unde! Anthem (ft. Rushi Unde)",
     description: "A musical tribute to the man who prioritizes Vada Pav over Deadlines. Watch the premiere now.",
     keywords: ["Oh Unde!", "Marine Drive", "Rushi Unde", "Vada Pav", "Deadline", "Lazy Sunday"],
