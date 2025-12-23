@@ -24,7 +24,7 @@ import Firecrackers from '@/components/Firecrackers';
 
 export default function Home() {
     const videoUrl = "https://ik.imagekit.io/52eyzwbyy/InShot_20251223_102216894.mp4/ik-master.m3u8?tr=sr-240_360_480_720_1080_2160";
-    const TARGET_DATE = '2025-12-23T16:03:00';
+    const TARGET_DATE = '2025-12-23T19:18:00';
 
     const [isReleased, setIsReleased] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -61,7 +61,8 @@ export default function Home() {
 
     return (
         <div className="page">
-            {showFirecrackers ? <Firecrackers /> : <Snowfall />}
+            <Snowfall />
+            {showFirecrackers && <Firecrackers />}
 
             {/* Main Content */}
             <main className="main">
