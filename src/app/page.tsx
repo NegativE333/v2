@@ -70,7 +70,7 @@ export default function Home() {
                         </p>
                         <h1 className="hero-title">{"Oh Unde!"}</h1>
                         <p className="hero-description">
-                            {isReleased ? "The Client thinks he is Coding. The Boss thinks he is Working. We know he is Snoring. The truth is finally out." : "The story of a man who fought the deadline... and lost. Premieres at Midnight."}
+                            {isReleased ? "The story of a man who fought the deadline... and lost." : "The story of a man who fought the deadline... and lost. Premieres at Midnight."}
                         </p>
                     </div>
 
