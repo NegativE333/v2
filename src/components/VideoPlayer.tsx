@@ -34,6 +34,20 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
         const video = videoRef.current;
         if (!video) return;
 
+        const attemptPlay = async () => {
+            try {
+                video.muted = false;
+                await video.play();
+                setIsPlaying(true);
+                setIsMuted(false);
+            } catch (err) {
+                console.log('Autoplay failed. Interaction needed.');
+                // Do nothing, let user interact naturally.
+                // We keep the video muted state as false so when they click play it's unmuted.
+                setIsPlaying(false);
+            }
+        };
+
         const initializeVideo = () => {
             // Check if it's an HLS stream
             const isHLS = src.includes('.m3u8');
@@ -51,7 +65,7 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
 
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     setIsLoading(false);
-                    video.play().catch(console.error);
+                    attemptPlay();
                 });
 
                 hls.on(Hls.Events.ERROR, (_, data) => {
@@ -67,7 +81,7 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
                 video.src = src;
                 video.addEventListener('loadeddata', () => {
                     setIsLoading(false);
-                    video.play().catch(console.error);
+                    attemptPlay();
                 });
             }
         };
@@ -102,6 +116,7 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
         };
         const handleWaiting = () => setIsLoading(true);
         const handleCanPlay = () => setIsLoading(false);
+        const handleEnded = () => setIsPlaying(false);
 
         video.addEventListener('play', handlePlay);
         video.addEventListener('pause', handlePause);
@@ -109,6 +124,7 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
         video.addEventListener('durationchange', handleDurationChange);
         video.addEventListener('waiting', handleWaiting);
         video.addEventListener('canplay', handleCanPlay);
+        video.addEventListener('ended', handleEnded);
 
         return () => {
             video.removeEventListener('play', handlePlay);
@@ -117,6 +133,7 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
             video.removeEventListener('durationchange', handleDurationChange);
             video.removeEventListener('waiting', handleWaiting);
             video.removeEventListener('canplay', handleCanPlay);
+            video.removeEventListener('ended', handleEnded);
         };
     }, []);
 
@@ -126,7 +143,7 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
         if (!video) return;
 
         if (video.paused) {
-            video.play();
+            video.play().catch(console.error);
         } else {
             video.pause();
         }
@@ -138,7 +155,9 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
 
         video.muted = !video.muted;
         setIsMuted(video.muted);
-        setShowUnmuteHint(false);
+        if (!video.muted) {
+            setShowUnmuteHint(false);
+        }
     }, []);
 
     const handleProgressClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -151,28 +170,21 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
         video.currentTime = percent * video.duration;
     }, []);
 
-    const toggleFullscreen = useCallback(() => {
-        const video = videoRef.current;
-        if (!video) return;
 
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        } else {
-            video.parentElement?.requestFullscreen();
-        }
-    }, []);
 
     return (
-        <div className="video-container">
+        <div className="video-container group">
             <div className="video-wrapper">
                 <video
                     ref={videoRef}
                     poster={poster}
                     muted={isMuted}
-                    autoPlay
                     playsInline
                     loop
                     title={title}
+                    className="w-full h-full object-cover"
+                    onClick={togglePlay}
+                    style={{ cursor: 'pointer' }}
                 />
 
                 {/* Loading Spinner */}
@@ -183,7 +195,7 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
                 )}
 
                 {/* Video Controls */}
-                <div className="video-controls">
+                <div className="video-controls z-30">
                     {/* Play/Pause Button */}
                     <button className="control-btn" onClick={togglePlay} aria-label={isPlaying ? 'Pause' : 'Play'}>
                         {isPlaying ? (
@@ -218,12 +230,6 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
                         )}
                     </button>
 
-                    {/* Fullscreen Button */}
-                    <button className="control-btn" onClick={toggleFullscreen} aria-label="Fullscreen">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
-                        </svg>
-                    </button>
                 </div>
             </div>
         </div>

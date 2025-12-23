@@ -13,13 +13,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "StreamVault | Premium Video Streaming",
-    description: "Experience stunning video streaming with adaptive quality. Watch in crystal-clear HD with seamless playback.",
-    keywords: ["video streaming", "HLS", "adaptive streaming", "HD video"],
+    title: "Oh Unde! Anthem (ft. Rushi Unde)",
+    description: "A musical tribute to the man who prioritizes Vada Pav over Deadlines. Watch the premiere now.",
+    keywords: ["Oh Unde!", "Marine Drive", "Rushi Unde", "Vada Pav", "Deadline", "Lazy Sunday"],
     openGraph: {
-        title: "StreamVault | Premium Video Streaming",
-        description: "Experience stunning video streaming with adaptive quality.",
+        title: "Oh Unde! Anthem (ft. Rushi Unde)",
+        description: "A musical tribute to the man who prioritizes Vada Pav over Deadlines. Watch the premiere now.",
         type: "website",
+        images: [
+            {
+                url: "/unde-og.png",
+                width: 1200,
+                height: 630,
+                alt: "Oh Unde! Anthem (ft. Rushi Unde)",
+            },
+        ],
     },
 };
 

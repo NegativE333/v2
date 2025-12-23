@@ -23,7 +23,7 @@ import Snowfall from '@/components/Snowfall';
 
 export default function Home() {
     const videoUrl = "https://ik.imagekit.io/52eyzwbyy/InShot_20251223_102216894.mp4/ik-master.m3u8?tr=sr-240_360_480_720_1080_2160";
-    const TARGET_DATE = '2025-12-23T11:35:00';
+    const TARGET_DATE = '2025-12-23T15:20:00';
 
     const [isReleased, setIsReleased] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -68,7 +68,7 @@ export default function Home() {
                         <p className="hero-eyebrow">
                             {isReleased ? "Live Now" : "Christmas Special • December 25, 2025"}
                         </p>
-                        <h1 className="hero-title">{isReleased ? "THE 'LAZY SUNDAY' SCAM" : "THE LONG NAP"}</h1>
+                        <h1 className="hero-title">{"Oh Unde!"}</h1>
                         <p className="hero-description">
                             {isReleased ? "The Client thinks he is Coding. The Boss thinks he is Working. We know he is Snoring. The truth is finally out." : "The story of a man who fought the deadline... and lost. Premieres at Midnight."}
                         </p>
