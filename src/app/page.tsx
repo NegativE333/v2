@@ -1,66 +1,99 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import Countdown from '@/components/Countdown';
+
+const VideoPlayer = dynamic(() => import('@/components/VideoPlayer'), {
+    ssr: false,
+    loading: () => (
+        <div className="video-card">
+            <div className="video-container">
+                <div className="video-wrapper">
+                    <div className="video-loading">
+                        <div className="loading-spinner" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    ),
+});
+
+import Snowfall from '@/components/Snowfall';
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    const videoUrl = "https://ik.imagekit.io/52eyzwbyy/InShot_20251223_102216894.mp4/ik-master.m3u8?tr=sr-240_360_480_720_1080_2160";
+    const TARGET_DATE = '2025-12-23T11:35:00';
+
+    const [isReleased, setIsReleased] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const checkRelease = () => {
+            const now = new Date();
+            const target = new Date(TARGET_DATE);
+
+            if (now >= target) {
+                setIsReleased(true);
+            }
+            setIsLoading(false);
+        };
+
+        checkRelease();
+    }, []);
+
+    const handleCountdownComplete = () => {
+        setIsReleased(true);
+    };
+
+    if (isLoading) {
+        return (
+            <div className="page" style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <div className="video-loading">
+                    <div className="loading-spinner" />
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="page">
+            <Snowfall />
+
+            {/* Main Content */}
+            <main className="main">
+                <div className="container">
+                    {/* Hero */}
+                    <div className="hero">
+                        <p className="hero-eyebrow">
+                            {isReleased ? "Live Now" : "Christmas Special • December 25, 2025"}
+                        </p>
+                        <h1 className="hero-title">{isReleased ? "THE 'LAZY SUNDAY' SCAM" : "THE LONG NAP"}</h1>
+                        <p className="hero-description">
+                            {isReleased ? "The Client thinks he is Coding. The Boss thinks he is Working. We know he is Snoring. The truth is finally out." : "The story of a man who fought the deadline... and lost. Premieres at Midnight."}
+                        </p>
+                    </div>
+
+                    {/* Content Card (Countdown or Video) */}
+                    <div className="video-card">
+                        {isReleased ? (
+                            <VideoPlayer
+                                src={videoUrl}
+                                title="Oh Unde!"
+                            />
+                        ) : (
+                            <Countdown targetDate={TARGET_DATE} onComplete={handleCountdownComplete} />
+                        )}
+                    </div>
+                </div>
+            </main>
+
+            {/* Footer */}
+            <footer className="footer">
+                <div className="container">
+                    <p className="footer-text">Made with for Rushi • See you on the 25th!</p>
+                </div>
+            </footer>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    );
 }
