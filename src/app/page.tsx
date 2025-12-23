@@ -91,7 +91,7 @@ export default function Home() {
             {/* Footer */}
             <footer className="footer">
                 <div className="container">
-                    <p className="footer-text">Made with for Rushi • See you on the 25th!</p>
+                    <p className="footer-text">{isReleased ? "See you again on 25 Dec 2026!" : "See you on the 25th!"}</p>
                 </div>
             </footer>
         </div>
