@@ -7,9 +7,11 @@ interface VideoPlayerProps {
     src: string;
     poster?: string;
     title?: string;
+    onFireworkTrigger?: (isActive: boolean) => void;
+    onGoldenTrigger?: (isActive: boolean) => void;
 }
 
-export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
+export default function VideoPlayer({ src, poster, title, onFireworkTrigger, onGoldenTrigger }: VideoPlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const hlsRef = useRef<Hls | null>(null);
     const progressRef = useRef<HTMLDivElement>(null);
@@ -107,6 +109,18 @@ export default function VideoPlayer({ src, poster, title }: VideoPlayerProps) {
             if (video.duration) {
                 setProgress((video.currentTime / video.duration) * 100);
                 setCurrentTime(formatTime(video.currentTime));
+
+                // Trigger Firecrackers (1m 41s to 1m 58s -> 101s to 118s)
+                if (onFireworkTrigger) {
+                    const shouldTrigger = video.currentTime >= 101 && video.currentTime <= 118;
+                    onFireworkTrigger(shouldTrigger);
+                }
+
+                // Trigger Golden Title (26s to 35s)
+                if (onGoldenTrigger) {
+                    const shouldTrigger = video.currentTime >= 26 && video.currentTime <= 35;
+                    onGoldenTrigger(shouldTrigger);
+                }
             }
         };
         const handleDurationChange = () => {

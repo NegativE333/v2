@@ -20,13 +20,16 @@ const VideoPlayer = dynamic(() => import('@/components/VideoPlayer'), {
 });
 
 import Snowfall from '@/components/Snowfall';
+import Firecrackers from '@/components/Firecrackers';
 
 export default function Home() {
     const videoUrl = "https://ik.imagekit.io/52eyzwbyy/InShot_20251223_102216894.mp4/ik-master.m3u8?tr=sr-240_360_480_720_1080_2160";
-    const TARGET_DATE = '2025-12-23T16:00:00';
+    const TARGET_DATE = '2025-12-23T16:03:00';
 
     const [isReleased, setIsReleased] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [showFirecrackers, setShowFirecrackers] = useState(false);
+    const [isGolden, setIsGolden] = useState(false);
 
     useEffect(() => {
         const checkRelease = () => {
@@ -58,7 +61,7 @@ export default function Home() {
 
     return (
         <div className="page">
-            <Snowfall />
+            {showFirecrackers ? <Firecrackers /> : <Snowfall />}
 
             {/* Main Content */}
             <main className="main">
@@ -68,7 +71,7 @@ export default function Home() {
                         <p className="hero-eyebrow">
                             {isReleased ? "Live Now" : "Christmas Special • December 25, 2025"}
                         </p>
-                        <h1 className="hero-title">{"Oh Unde!"}</h1>
+                        <h1 className={`hero-title ${isGolden ? 'text-golden' : ''}`}>{"Oh Unde!"}</h1>
                         <p className="hero-description">
                             {isReleased ? "The story of a man who fought the deadline... and lost." : "The story of a man who fought the deadline... and lost. Premieres at Midnight."}
                         </p>
@@ -80,6 +83,8 @@ export default function Home() {
                             <VideoPlayer
                                 src={videoUrl}
                                 title="Oh Unde!"
+                                onFireworkTrigger={setShowFirecrackers}
+                                onGoldenTrigger={setIsGolden}
                             />
                         ) : (
                             <Countdown targetDate={TARGET_DATE} onComplete={handleCountdownComplete} />

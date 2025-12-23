@@ -139,7 +139,7 @@ body {
 /* ===== VIDEO PLAYER ===== */
 .video-card {
     background: var(--bg-secondary);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.06);
     position: relative;
@@ -536,6 +536,28 @@ body {
 
     .time-display {
         display: none;
+    }
+
+    /* Golden Shimmer for Hero Title */
+    .text-golden {
+        /* Base white with a moving golden band */
+        background: linear-gradient(110deg,
+                #ffffff 35%,
+                #e3c578 50%,
+                #ffffff 65%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        animation: shine 3s linear infinite;
+        text-shadow: 0 0 10px rgba(227, 197, 120, 0.3);
+    }
+
+    @keyframes shine {
+        to {
+            background-position: 200% center;
+        }
     }
 
     .video-info {
