@@ -21,10 +21,14 @@ const VideoPlayer = dynamic(() => import('@/components/VideoPlayer'), {
 
 import Snowfall from '@/components/Snowfall';
 import Firecrackers from '@/components/Firecrackers';
+import CancellationNotice from '@/components/CancellationNotice';
 
 export default function Home() {
     const videoUrl = "https://ik.imagekit.io/52eyzwbyy/InShot_20251223_102216894.mp4/ik-master.m3u8?tr=sr-240_360_480_720_1080_2160";
     const TARGET_DATE = '2025-12-25T00:00:00';
+    
+    // Check if premiere is cancelled via environment variable
+    const isCancelled = true;
 
     const [isReleased, setIsReleased] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +36,12 @@ export default function Home() {
     const [isGolden, setIsGolden] = useState(false);
 
     useEffect(() => {
+        // If cancelled, skip release check
+        if (isCancelled) {
+            setIsLoading(false);
+            return;
+        }
+
         const checkRelease = () => {
             const now = new Date();
             const target = new Date(TARGET_DATE);
@@ -43,7 +53,7 @@ export default function Home() {
         };
 
         checkRelease();
-    }, []);
+    }, [isCancelled]);
 
     const handleCountdownComplete = () => {
         setIsReleased(true);
@@ -70,17 +80,27 @@ export default function Home() {
                     {/* Hero */}
                     <div className="hero">
                         <p className="hero-eyebrow">
-                            {isReleased ? "Live Now" : "Christmas Special • December 25, 2025"}
+                            {isCancelled 
+                                ? "Premiere Cancelled" 
+                                : isReleased 
+                                    ? "Live Now" 
+                                    : "Christmas Special • December 25, 2025"}
                         </p>
                         <h1 className={`hero-title ${isGolden ? 'text-golden' : ''}`}>{"Oh Unde!"}</h1>
                         <p className="hero-description">
-                            {isReleased ? "The story of a man who fought the deadline... and lost." : "The story of a man who fought the deadline... and lost. Premieres at Midnight."}
+                            {isCancelled 
+                                ? "" 
+                                : isReleased 
+                                    ? "The story of a man who fought the deadline... and lost." 
+                                    : "The story of a man who fought the deadline... and lost. Premieres at Midnight."}
                         </p>
                     </div>
 
-                    {/* Content Card (Countdown or Video) */}
+                    {/* Content Card (Cancellation, Countdown, or Video) */}
                     <div className="video-card">
-                        {isReleased ? (
+                        {isCancelled ? (
+                            <CancellationNotice />
+                        ) : isReleased ? (
                             <VideoPlayer
                                 src={videoUrl}
                                 title="Oh Unde!"
@@ -97,7 +117,13 @@ export default function Home() {
             {/* Footer */}
             <footer className="footer">
                 <div className="container">
-                    <p className="footer-text">{isReleased ? "See you again on 25 Dec 2026!" : "See you on the 25th!"}</p>
+                    <p className="footer-text">
+                        {isCancelled 
+                            ? "Maybe next time?"
+                            : isReleased 
+                                ? "See you again on 25 Dec 2026!" 
+                                : "See you on the 25th!"}
+                    </p>
                 </div>
             </footer>
         </div>
